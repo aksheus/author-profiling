@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np 
 from sklearn import svm
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import f1_score,make_scorer
+from sklearn.metrics import f1_score,classification_report
 import argparse
 
 """
@@ -29,7 +29,7 @@ def get_fnames(unpruned_arff):
 		for line in af:
 			pieces = line.split()
 			if data_flag:
-				fnames.append(pieces[-1])
+				fnames.append(pieces[-1].replace('_','.'))
 
 			if pieces[0] == '@data':
 				data_flag = True
@@ -47,14 +47,19 @@ if __name__ == '__main__':
 	tedf , truth = get_data_frame(args['test'])
 	fnames = get_fnames(args['fnames'])
 
-	print trdf.head
-	print '########################################'
-	print labels
-	print '#######################################'
-	print tedf.head
-	print '######################################'
-	print truth
-	print '######################################'
-	print fnames
+	clf1 = svm.SVC()
+	clf2 = svm.NuSVC()
+	clf3 = svm.LinearSVC()
 
+	clf1.fit(trdf,labels)
+	clf2.fit(trdf,labels)
+	clf3.fit(trdf,labels)
+
+	z1 = clf1.predict(tedf)
+	z2 = clf2.predict(tedf)
+	z3 = clf3.predict(tedf)
+
+	print 'SVC : {0}'.format(classification_report(y_true=truth,y_pred=z1,target_names=['female','male']))
+	print 'NuSVC : {0}'.format(classification_report(y_true=truth,y_pred=z2,target_names=['female','male']))
+	print 'LinearSVC : {0}'.format(classification_report(y_true=truth,y_pred=z3,target_names=['female','male']))
 
