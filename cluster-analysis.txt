@@ -1,0 +1,45 @@
+f1 scores on 10 fold cross validation
+1) 0.924867724868
+2) 0.909663865546
+3) 0.913319238901
+4) 0.91684434968
+5) 0.900321543408
+6) 0.926624737945
+7) 0.914163090129
+8) 0.925341745531
+9) 0.93501048218
+10) 0.934169278997
+########################
+importance among different clusterings
+no_clusters feature info_gain
+1 2_attr_male 0.341932413111
+2 3_attr_female_0 0.10457451689
+3 6_attr_male_1 0.0956489403075
+4 8_attr_female_1 0.0255632350353
+5 10_attr_male_0 0.0103581615337
+###########  now attribute importance irrespective of clustering group ##########
+number of clusters : 1
+feature importances are as follows, feature_name : info_gain
+2_attr_male : 0.341932413111
+1_attr_female : 0.00753992322235
+########################################################
+number of clusters : 2
+feature importances are as follows, feature_name : info_gain
+3_attr_female_0 : 0.10457451689
+4_attr_female_1 : 0.00376644860571
+########################################################
+number of clusters : 3
+feature importances are as follows, feature_name : info_gain
+6_attr_male_1 : 0.0956489403075
+5_attr_male_0 : 0.00593728648615
+########################################################
+number of clusters : 4
+feature importances are as follows, feature_name : info_gain
+8_attr_female_1 : 0.0255632350353
+7_attr_female_0 : 0.00337638672806
+########################################################
+number of clusters : 5
+feature importances are as follows, feature_name : info_gain
+10_attr_male_0 : 0.0103581615337
+9_attr_female_2 : 0.00457094624078
+########################################################
