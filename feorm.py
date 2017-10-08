@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np 
 from sklearn import svm
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import f1_score,classification_report
+from sklearn.metrics import f1_score,classification_report,make_scorer
+from sklearn.ensemble import RandomForestClassifier as RFC,AdaBoostClassifier as Ada
+from sklearn.model_selection import cross_validate
 import argparse
 
 """
@@ -37,6 +39,7 @@ def get_fnames(unpruned_arff):
 
 
 if __name__ == '__main__':
+
 	parser = argparse.ArgumentParser(description='python feorm.py --train <train-csv> --test <test-csv> --fnames <unpruned-test-arff file>')
 	parser.add_argument('-tr','--train',help='path to arff file',required=True)
 	parser.add_argument('-te','--test',help='path to arff file',required=True)
@@ -44,22 +47,45 @@ if __name__ == '__main__':
 	args= vars(parser.parse_args())
 
 	trdf , labels = get_data_frame(args['train'])
-	tedf , truth = get_data_frame(args['test'])
+	#tedf , truth = get_data_frame(args['test'])
 	fnames = get_fnames(args['fnames'])
 
-	clf1 = svm.SVC()
-	clf2 = svm.NuSVC()
-	clf3 = svm.LinearSVC()
+	#### for pyramidal
+	clf = RFC(n_estimators=50,
+	 criterion='entropy', 
+	 max_depth=None, 
+	 min_samples_split=2, 
+	  max_features=10, 
+	  max_leaf_nodes=None,
+	  class_weight = 'balanced'
+	)
+	#########
+	"""clf1 = svm.SVC(C=25,kernel='poly')
+	clf2 = svm.SVC(C=25,kernel='rbf')
+	clf3 = svm.SVC(C=25,kernel='linear')"""
+	
+	scoring = ['f1_macro','accuracy','precision_macro','recall_macro']
+	scores = cross_validate(clf,trdf,labels,scoring = scoring,cv=10,return_train_score=False)
+	for s in scores.keys():
+		print s
+		for v in scores[s]:
+			print v
+		print '###############################'
+		
 
-	clf1.fit(trdf,labels)
+	#clf.fit(trdf,labels)
+	"""clf1.fit(trdf,labels)
 	clf2.fit(trdf,labels)
-	clf3.fit(trdf,labels)
+	clf3.fit(trdf,labels)"""
 
-	z1 = clf1.predict(tedf)
+	#z = clf.predict(tedf)
+	"""z1 = clf1.predict(tedf)
 	z2 = clf2.predict(tedf)
-	z3 = clf3.predict(tedf)
+	z3 = clf3.predict(tedf)"""
+	
+	#print 'RF : '
+	#print '{0}'.format(classification_report(y_true=truth,y_pred=z,target_names=['female','male']))
+	#print 'SVC linear: '
+	#print '{0}'.format(classification_report(y_true=truth,y_pred=z3,target_names=['female','male']))
 
-	print 'SVC : {0}'.format(classification_report(y_true=truth,y_pred=z1,target_names=['female','male']))
-	print 'NuSVC : {0}'.format(classification_report(y_true=truth,y_pred=z2,target_names=['female','male']))
-	print 'LinearSVC : {0}'.format(classification_report(y_true=truth,y_pred=z3,target_names=['female','male']))
 
