@@ -48,9 +48,9 @@ if __name__ == '__main__':
 
 	trdf , labels = get_data_frame(args['train'])
 	#tedf , truth = get_data_frame(args['test'])
-	fnames = get_fnames(args['fnames'])
+	#fnames = get_fnames(args['fnames'])
 
-	#### for pyramidal
+	"""#### for pyramidal
 	clf = RFC(n_estimators=50,
 	 criterion='entropy', 
 	 max_depth=None, 
@@ -59,18 +59,21 @@ if __name__ == '__main__':
 	  max_leaf_nodes=None,
 	  class_weight = 'balanced'
 	)
-	#########
-	"""clf1 = svm.SVC(C=25,kernel='poly')
-	clf2 = svm.SVC(C=25,kernel='rbf')
-	clf3 = svm.SVC(C=25,kernel='linear')"""
+	#########"""
+	clf1 = svm.SVC(C=1,kernel='poly',gamma = 'auto')
+	clf2 = svm.SVC(C=1,kernel='rbf',gamma = 'auto')
+	clf3 = svm.SVC(C=1,kernel='linear',gamma = 'auto')
+	svms = (clf1,clf2,clf3)
 	
 	scoring = ['f1_macro','accuracy','precision_macro','recall_macro']
-	scores = cross_validate(clf,trdf,labels,scoring = scoring,cv=10,return_train_score=False)
-	for s in scores.keys():
-		print s
-		for v in scores[s]:
-			print v
-		print '###############################'
+	for clf in svms:
+		scores = cross_validate(clf,trdf,labels,scoring = scoring,cv=10,return_train_score=False)
+		for s in scores.keys():
+			print s
+			for v in scores[s]:
+				print v
+			print '###############################'
+		print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
 		
 
 	#clf.fit(trdf,labels)
